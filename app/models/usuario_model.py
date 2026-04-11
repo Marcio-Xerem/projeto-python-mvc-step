@@ -1,10 +1,9 @@
+from app.database.supabase_client import supabase
 
-usuarios = []
+def listar_usuarios():
+	response = supabase.table("usuarios").select("*").execute()
+	return response.data
 
-
-def listar():
-    return usuarios
-
-
-def criar(nome):
-    usuarios.append(nome)
+def criar_usuario(nome):
+	response = supabase.table("usuarios").insert({"nome": nome}).execute()
+	return response.data
