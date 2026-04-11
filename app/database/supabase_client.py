@@ -1,8 +1,14 @@
 # app/database/supabase_client.py
-import requests
 
-SUPABASE_URL = ""
-SUPABASE_KEY = ""
+import os
+import requests
+from dotenv import load_dotenv
+
+# Carrega variáveis do .env
+load_dotenv()
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 supabase = {
     "url": SUPABASE_URL,
