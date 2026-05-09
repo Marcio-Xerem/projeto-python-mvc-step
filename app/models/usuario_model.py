@@ -5,14 +5,26 @@ import jwt
 from datetime import datetime, timedelta
 import os
 
-SUPABASE_URL = SUPABASE_URL.rstrip("/")
+SUPABASE_URL = (SUPABASE_URL or "").rstrip("/")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", SUPABASE_KEY)
 SECRET_KEY = os.getenv("SECRET_KEY")
 EXPIRATION_MINUTES = int(os.getenv("EXPIRATION_MINUTES", 60))
 
 ALGORITHM = "HS256"
 
+
+def validar_config_supabase():
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        raise Exception("Configuração ausente: defina SUPABASE_URL e SUPABASE_KEY no arquivo .env")
+
+
+def validar_secret_key():
+    if not SECRET_KEY:
+        raise Exception("Configuração ausente: defina SECRET_KEY no arquivo .env")
+
 def get_headers(extra_headers=None):
+    validar_config_supabase()
+
     headers = {
         "apikey": SUPABASE_KEY,
         "Authorization": f"Bearer {SUPABASE_KEY}",
@@ -25,7 +37,7 @@ def get_headers(extra_headers=None):
     return headers
 
 
-def listar_usuarios():
+def listar_usuarios():    
     url = f"{SUPABASE_URL}/rest/v1/usuarios?select=*"
 
     response = requests.get(url, headers=get_headers())
@@ -37,6 +49,7 @@ def listar_usuarios():
 
 
 def buscar_usuario_por_email(email):
+    validar_config_supabase()
     url = f"{SUPABASE_URL}/rest/v1/usuarios?email=eq.{email}&select=*"
 
     response = requests.get(url, headers=get_headers())
@@ -50,6 +63,8 @@ def buscar_usuario_por_email(email):
 
 
 def cadastrar_usuario(nome, email, senha):
+    validar_config_supabase()
+
     if buscar_usuario_por_email(email):
         raise Exception("Já existe um usuário cadastrado com este email.")
 
@@ -86,6 +101,8 @@ def cadastrar_usuario(nome, email, senha):
     }
 
 def gerar_token(usuario_id, email):
+    validar_secret_key()
+
     payload = {
         "sub": usuario_id,
         "email": email,
