@@ -16,7 +16,7 @@ def listar_usuarios():
 
 @app.post("/cadastro")
 def cadastro(user: UsuarioCreate):
-    return usuario_controller.cadastrar(user.email, user.senha)
+    return usuario_controller.cadastrar(user.nome, user.email, user.senha)
 
 @app.post("/login")
 def login(user: Login):

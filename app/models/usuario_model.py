@@ -49,7 +49,7 @@ def buscar_usuario_por_email(email):
     return usuarios[0] if usuarios else None
 
 
-def cadastrar_usuario(email, senha):
+def cadastrar_usuario(nome, email, senha):
     if buscar_usuario_por_email(email):
         raise Exception("Já existe um usuário cadastrado com este email.")
 
@@ -61,6 +61,7 @@ def cadastrar_usuario(email, senha):
     url = f"{SUPABASE_URL}/rest/v1/usuarios"
 
     data = {
+        "nome": nome,
         "email": email,
         "senha": senha_hash
     }
