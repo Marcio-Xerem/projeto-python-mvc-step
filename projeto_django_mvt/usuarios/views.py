@@ -24,6 +24,17 @@ def criar_usuario(request):
 def listar_template(request):
     usuarios = Usuario.objects.all()
     return render(request, 'usuarios/lista.html', {'usuarios': usuarios})
+
+
+# API: deletar usuário
+@api_view(['DELETE'])
+def deletar_usuario(request, id):
+    try:
+        usuario = Usuario.objects.get(id=id)
+        usuario.delete()
+        return Response({"msg": "Usuário deletado com sucesso"})
+    except Usuario.DoesNotExist:
+        return Response({"erro": "Usuário não encontrado"}, status=404)
           
 
 # Create your views here.
